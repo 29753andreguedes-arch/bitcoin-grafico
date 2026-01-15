@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Preço Bitcoin em Tempo Real</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #f4f4f4; }
+        .chart-container { width: 80%; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h1 { color: #f7931a; }
+    </style>
+</head>
+<body>
+
+    <h1>Bitcoin (BTC) - USD</h1>
+    <div class="chart-container">
+        <canvas id="btcChart"></canvas>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('btcChart').getContext('2d');
+        let labels = [];
+        let prices = [];
+
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Preço BTC (USD)',
+                    data: prices,
+                    borderColor: '#f7931a',
+                    backgroundColor: 'rgba(247, 147, 26, 0.2)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                scales: {
+                    x: { display: true, title: { display: true, text: 'Tempo' } },
+                    y: { beginAtZero: false }
+                }
+            }
+        });
+
+        async function updatePrice() {
+            try {
+                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+                const data = await response.json();
+                const price = data.bitcoin.usd;
+                const time = new Date().toLocaleTimeString();
+
+                if (labels.length > 10) { labels.shift(); prices.shift(); }
+
+                labels.push(time);
+                prices.push(price);
+                chart.update();
+            } catch (error) {
+                console.error("Erro ao buscar dados:", error);
+            }
+        }
+
+        setInterval(updatePrice, 5000); // Atualiza a cada 5 segundos
+        updatePrice();
+    </script>
+</body>
+</html>

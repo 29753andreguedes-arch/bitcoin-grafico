@@ -2,13 +2,12 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
     body {
-        background-color: #121212;
-        color: #FFFFFF;
+        background-color: #FFFFFF;
+        color: #1F31AC;
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 10px;
@@ -23,9 +22,9 @@
         width: 100%;
         padding: 10px;
         margin-bottom: 15px;
-        background: #121212;
-        color: #FFFFFF;
-        border: 1px solid #1F31AC;
+        background: #FFFFFF;
+        color: #1F31AC;
+        border: 2px solid #1F31AC;
         border-radius: 5px;
     }
 
@@ -37,7 +36,7 @@
 
 <body>
 
-<h2>Monitor Cripto (Simulado)</h2>
+<h2>Monitor Cripto</h2>
 
 <select id="moeda">
     <option value="BTC">Bitcoin</option>
@@ -81,7 +80,7 @@ const chart = new Chart(ctx, {
             label: moedas[moedaAtual].label,
             data: dados,
             borderColor: "#1F31AC",
-            backgroundColor: "rgba(31,49,172,0.2)",
+            backgroundColor: "rgba(31,49,172,0.15)",
             tension: 0.4,
             fill: true
         }]
@@ -89,16 +88,18 @@ const chart = new Chart(ctx, {
     options: {
         responsive: true,
         plugins: {
-            legend: { labels: { color: "#FFFFFF" } }
+            legend: {
+                labels: { color: "#1F31AC" }
+            }
         },
         scales: {
             x: {
-                ticks: { color: "#FFFFFF" },
-                grid: { color: "#333" }
+                ticks: { color: "#1F31AC" },
+                grid: { color: "#1F31AC33" }
             },
             y: {
-                ticks: { color: "#FFFFFF" },
-                grid: { color: "#333" }
+                ticks: { color: "#1F31AC" },
+                grid: { color: "#1F31AC33" }
             }
         }
     }

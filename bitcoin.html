@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background: #121212; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; }
+        .container { width: 90%; max-width: 600px; padding: 20px; }
+        h2 { color: #f7931a; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Monitor Bitcoin (Simulado)</h2>
+        <canvas id="meuGrafico"></canvas>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('meuGrafico').getContext('2d');
+        
+        // Dados iniciais fictícios para o gráfico aparecer logo
+        let labels = ['10:00', '10:05', '10:10', '10:15', '10:20'];
+        let valores = [62000, 62500, 62300, 62800, 63000];
+
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'BTC/USD',
+                    data: valores,
+                    borderColor: '#f7931a',
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: 'rgba(247, 147, 26, 0.1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { grid: { color: '#333' } }, x: { grid: { color: '#333' } } }
+            }
+        });
+
+        // Função para simular variação de preço a cada 3 segundos
+        setInterval(() => {
+            let ultimoPreco = valores[valores.length - 1];
+            let variacao = (Math.random() - 0.5) * 500; // Sobe ou desce até 250$
+            let novoPreco = ultimoPreco + variacao;
+            
+            let agora = new Date();
+            let hora = agora.getHours() + ":" + agora.getMinutes() + ":" + agora.getSeconds();
+
+            if(labels.length > 10) { labels.shift(); valores.shift(); }
+            
+            labels.push(hora);
+            valores.push(novoPreco);
+            chart.update();
+        }, 3000);
+    </script>
+</body>
+</html>

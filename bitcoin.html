@@ -89,24 +89,4 @@ let chart = new Chart(ctx, {
             }
         },
         scales: {
-            x: {
-                ticks: { color: "#9aa4b2" },
-                grid: { color: "rgba(255,255,255,0.05)" }
-            },
-            y: {
-                ticks: { color: "#9aa4b2" },
-                grid: { color: "rgba(255,255,255,0.05)" }
-            }
-        }
-    }
-});
-
-document.getElementById("coinSelect").addEventListener("change", function () {
-    const coin = this.value;
-    chart.data.datasets[0].data = dataCoins[coin];
-    chart.update();
-});
-</script>
-
-</body>
-</html>
+            x:

@@ -1,60 +1,131 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body { background: #121212; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; }
-        .container { width: 90%; max-width: 600px; padding: 20px; }
-        h2 { color: #f7931a; }
-    </style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    body {
+        background-color: #121212;
+        color: #FFFFFF;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 10px;
+    }
+
+    h2 {
+        text-align: center;
+        color: #1F31AC;
+    }
+
+    select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        background: #121212;
+        color: #FFFFFF;
+        border: 1px solid #1F31AC;
+        border-radius: 5px;
+    }
+
+    canvas {
+        max-width: 100%;
+    }
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <h2>Monitor Bitcoin (Simulado)</h2>
-        <canvas id="meuGrafico"></canvas>
-    </div>
 
-    <script>
-        const ctx = document.getElementById('meuGrafico').getContext('2d');
-        
-        // Dados iniciais fictícios para o gráfico aparecer logo
-        let labels = ['10:00', '10:05', '10:10', '10:15', '10:20'];
-        let valores = [62000, 62500, 62300, 62800, 63000];
+<h2>Monitor Cripto (Simulado)</h2>
 
-        const chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'BTC/USD',
-                    data: valores,
-                    borderColor: '#f7931a',
-                    tension: 0.4,
-                    fill: true,
-                    backgroundColor: 'rgba(247, 147, 26, 0.1)'
-                }]
+<select id="moeda">
+    <option value="BTC">Bitcoin</option>
+    <option value="ETH">Ethereum</option>
+    <option value="USDT">Tether</option>
+    <option value="BNB">Binance Coin</option>
+</select>
+
+<canvas id="grafico"></canvas>
+
+<script>
+const ctx = document.getElementById("grafico").getContext("2d");
+
+const moedas = {
+    BTC: { label: "BTC / USD", preco: 63000, vol: 500 },
+    ETH: { label: "ETH / USD", preco: 3200, vol: 80 },
+    USDT:{ label: "USDT / USD",preco: 1, vol: 0.02 },
+    BNB: { label: "BNB / USD", preco: 420, vol: 15 }
+};
+
+let labels = [];
+let dados = [];
+let moedaAtual = "BTC";
+
+function resetDados() {
+    labels.length = 0;
+    dados.length = 0;
+    for (let i = 0; i < 5; i++) {
+        labels.push("");
+        dados.push(moedas[moedaAtual].preco);
+    }
+}
+
+resetDados();
+
+const chart = new Chart(ctx, {
+    type: "line",
+    data: {
+        labels: labels,
+        datasets: [{
+            label: moedas[moedaAtual].label,
+            data: dados,
+            borderColor: "#1F31AC",
+            backgroundColor: "rgba(31,49,172,0.2)",
+            tension: 0.4,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { labels: { color: "#FFFFFF" } }
+        },
+        scales: {
+            x: {
+                ticks: { color: "#FFFFFF" },
+                grid: { color: "#333" }
             },
-            options: {
-                responsive: true,
-                scales: { y: { grid: { color: '#333' } }, x: { grid: { color: '#333' } } }
+            y: {
+                ticks: { color: "#FFFFFF" },
+                grid: { color: "#333" }
             }
-        });
+        }
+    }
+});
 
-        // Função para simular variação de preço a cada 3 segundos
-        setInterval(() => {
-            let ultimoPreco = valores[valores.length - 1];
-            let variacao = (Math.random() - 0.5) * 500; // Sobe ou desce até 250$
-            let novoPreco = ultimoPreco + variacao;
-            
-            let agora = new Date();
-            let hora = agora.getHours() + ":" + agora.getMinutes() + ":" + agora.getSeconds();
+document.getElementById("moeda").addEventListener("change", function () {
+    moedaAtual = this.value;
+    resetDados();
+    chart.data.datasets[0].label = moedas[moedaAtual].label;
+    chart.update();
+});
 
-            if(labels.length > 10) { labels.shift(); valores.shift(); }
-            
-            labels.push(hora);
-            valores.push(novoPreco);
-            chart.update();
-        }, 3000);
-    </script>
+setInterval(() => {
+    let ultimo = dados[dados.length - 1];
+    let variacao = (Math.random() - 0.5) * moedas[moedaAtual].vol;
+    let novo = Math.max(0, ultimo + variacao);
+
+    if (labels.length > 10) {
+        labels.shift();
+        dados.shift();
+    }
+
+    labels.push("");
+    dados.push(novo);
+    chart.update();
+}, 3000);
+</script>
+
 </body>
 </html>

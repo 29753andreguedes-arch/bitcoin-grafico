@@ -1,70 +1,112 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    < title>Gráfico Bitcoin</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            background-color: #1F31AC;
-            color: #FFFFFF;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        h2 {
-            text-align: center;
-        }
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        canvas {
-            max-width: 100%;
-        }
-    </style>
+<style>
+    body {
+        margin: 0;
+        background: #0f131a;
+        color: #ffffff;
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        padding: 12px;
+    }
+
+    select {
+        background: #161b22;
+        color: #ffffff;
+        border: 1px solid #2a2f3a;
+        padding: 8px;
+        border-radius: 6px;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    canvas {
+        width: 100%;
+        height: 300px;
+    }
+</style>
 </head>
+
 <body>
+<div class="container">
 
-    <h2>Consulta do Bitcoin (BTC)</h2>
-    <canvas id="btcChart"></canvas>
+    <!-- Seletor de moeda -->
+    <select id="coinSelect">
+        <option value="BTC">Bitcoin (BTC)</option>
+        <option value="ETH">Ethereum (ETH)</option>
+        <option value="USDT">Tether (USDT)</option>
+        <option value="BNB">Binance Coin (BNB)</option>
+    </select>
 
-    <script>
-        const ctx = document.getElementById('btcChart').getContext('2d');
+    <!-- Gráfico -->
+    <canvas id="chart"></canvas>
+</div>
 
-        const btcChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-                datasets: [{
-                    label: 'Preço do Bitcoin (USD)',
-                    data: [42000, 43500, 42800, 45000, 46000, 45500, 47000],
-                    borderColor: '#FFFFFF',
-                    backgroundColor: 'rgba(255,255,255,0.2)',
-                    borderWidth: 2,
-                    tension: 0.4,
-                    pointBackgroundColor: '#FFFFFF'
-                }]
-            },
-            options: {
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#FFFFFF'
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: { color: '#FFFFFF' },
-                        grid: { color: 'rgba(255,255,255,0.2)' }
-                    },
-                    y: {
-                        ticks: { color: '#FFFFFF' },
-                        grid: { color: 'rgba(255,255,255,0.2)' }
-                    }
-                }
+<script>
+const dataCoins = {
+    BTC: [354500, 354200, 354600, 354000, 353200, 353800, 354100, 354400, 353700, 354300],
+    ETH: [2100, 2080, 2095, 2070, 2050, 2065, 2080, 2090, 2075, 2085],
+    USDT: [1.00, 1.00, 0.999, 1.001, 1.00, 1.00, 0.999, 1.00, 1.00, 1.00],
+    BNB: [310, 308, 312, 309, 305, 307, 309, 311, 308, 310]
+};
+
+const labels = [
+    "01:00","02:00","03:00","04:00","05:00",
+    "06:00","07:00","08:00","09:00","10:00"
+];
+
+const ctx = document.getElementById("chart").getContext("2d");
+
+let chart = new Chart(ctx, {
+    type: "line",
+    data: {
+        labels: labels,
+        datasets: [{
+            data: dataCoins.BTC,
+            borderColor: "#ff6b6b",
+            backgroundColor: "rgba(255,107,107,0.15)",
+            fill: true,
+            tension: 0.4,
+            pointRadius: 0
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                mode: "index",
+                intersect: false
             }
-        });
-    </script>
+        },
+        scales: {
+            x: {
+                ticks: { color: "#9aa4b2" },
+                grid: { color: "rgba(255,255,255,0.05)" }
+            },
+            y: {
+                ticks: { color: "#9aa4b2" },
+                grid: { color: "rgba(255,255,255,0.05)" }
+            }
+        }
+    }
+});
+
+document.getElementById("coinSelect").addEventListener("change", function () {
+    const coin = this.value;
+    chart.data.datasets[0].data = dataCoins[coin];
+    chart.update();
+});
+</script>
 
 </body>
 </html>

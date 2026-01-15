@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    body {
+        margin: 0;
+        background: #0f131a;
+        color: #ffffff;
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        padding: 12px;
+    }
+
+    select {
+        background: #161b22;
+        color: #ffffff;
+        border: 1px solid #2a2f3a;
+        padding: 8px;
+        border-radius: 6px;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    canvas {
+        width: 100%;
+        height: 300px;
+    }
+</style>
+</head>
+
+<body>
+<div class="container">
+
+    <!-- Seletor de moeda -->
+    <select id="coinSelect">
+        <option value="BTC">Bitcoin (BTC)</option>
+        <option value="ETH">Ethereum (ETH)</option>
+        <option value="USDT">Tether (USDT)</option>
+        <option value="BNB">Binance Coin (BNB)</option>
+    </select>
+
+    <!-- Gráfico -->
+    <canvas id="chart"></canvas>
+</div>
+
+<script>
+const dataCoins = {
+    BTC: [354500, 354200, 354600, 354000, 353200, 353800, 354100, 354400, 353700, 354300],
+    ETH: [2100, 2080, 2095, 2070, 2050, 2065, 2080, 2090, 2075, 2085],
+    USDT: [1.00, 1.00, 0.999, 1.001, 1.00, 1.00, 0.999, 1.00, 1.00, 1.00],
+    BNB: [310, 308, 312, 309, 305, 307, 309, 311, 308, 310]
+};
+
+const labels = [
+    "01:00","02:00","03:00","04:00","05:00",
+    "06:00","07:00","08:00","09:00","10:00"
+];
+
+const ctx = document.getElementById("chart").getContext("2d");
+
+let chart = new Chart(ctx, {
+    type: "line",
+    data: {
+        labels: labels,
+        datasets: [{
+            data: dataCoins.BTC,
+            borderColor: "#ff6b6b",
+            backgroundColor: "rgba(255,107,107,0.15)",
+            fill: true,
+            tension: 0.4,
+            pointRadius: 0
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                mode: "index",
+                intersect: false
+            }
+        },
+        scales: {
+            x:
